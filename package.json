@@ -1,0 +1,28 @@
+{
+  "name": "request_demo",
+  "version": "1.0.0",
+  "description": "just testing out request module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "*",
+    "body-parser": "*",
+    "bower": "*",
+    "cheerio": "^0.20.0",
+    "consolidate": "*",
+    "express": "*",
+    "handlebars": "*",
+    "jsdom": "*",
+    "mongoose": "*",
+    "msg91": "0.0.6",
+    "nodemailer": "*",
+    "request": "*"
+  },
+  "devDependencies": {
+    "redis": "^2.6.2"
+  }
+}

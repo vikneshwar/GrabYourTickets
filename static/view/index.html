@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Remind me to book</title>
+	<meta name="theme-color" content="#00897b">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- typehead and materizlizetags -->
+   
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.4/typeahead.bundle.min.js"></script> -->
+    <script type="text/javascript" src="/js/typeahead.js"></script>
+    <script type="text/javascript" src="/js/materialize-tags.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/materialize-tags.css">
+    
+    <!--app css and js-->
+    <link type="text/css" href="/fonts/SEASRN__.woff">
+    <script type="text/javascript" src="/js/script.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+	<div id="navbar-fixed">
+		<nav class="pink accent-4">
+			<div class="logoContainer">
+				<span id="logo">Grab Your Tickets</span>
+			</div>
+
+		</nav>
+	</div>
+	<div class="container">
+		<div class="section">
+			<div class="row">
+				<div class="col s12">
+					{{#if message}}
+					<div class="card-panel yellow darken-4 z-depth-3">
+						<span class="white-text">
+							{{message}}
+						</span>	
+					</div>
+					{{/if}}
+					<div class="card-panel z-depth-3">
+						<div class="row">
+							<form class="col s12" method="post" action="/" id="reg_form">
+								<div class="row">
+									<div class="input-field col s12">
+										<i class="material-icons prefix">location_city</i>
+										<input id="city"  type="text" class="validate" name="city" >
+										<label for="city">City</label>
+										<div id="city_error" class="error"></div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="input-field col s12">
+										<i class="material-icons prefix">movie</i>
+										<input id="movie"  type="text" class="validate" name="movie" >
+										<label for="movie">Movie</label>
+										<div id="movie_error" class="error"></div>
+									</div>
+								</div>
+									<div class="row">
+										<div class="input-field col s12">
+											<i class="material-icons prefix">theaters</i>
+											<input id="cinemas"  type="text" class="validate typehead-input" name="theater">
+											<label for="cinemas">Cinemas</label>
+											<div id="cinemas_error" class="error"></div>
+										</div>
+									</div>				
+								<div class="row">
+									<div class="input-field col s12">
+										<i class="material-icons prefix">today</i>
+										<input id="date" class="datepicker" type="text" class="validate" name="date" >
+										<label for="date">Date</label>
+										<div id="date_error" class="error"></div>
+									</div>
+								</div>
+								
+								<div class="row">
+									<div class="input-field col s12">
+										<i class="material-icons prefix">person</i>
+										<input id="name" type="text" class="validate" name="name" >
+										<label for="name">Name</label>
+										<div id="name_error" class="error"></div>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="input-field col s12">
+										<i class="material-icons prefix">phone_iphone</i>
+										<input id="mobile" type="tel" class="validate" name="mobileNumber">
+										<label for="mobile">Mobile Number</label>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="input-field col s12">
+										<i class="material-icons prefix">email</i>
+										<input id="email" type="email" class="validate" name="email">
+										<label for="email">Email</label>
+										<div id="email_mobile_error" class="error"></div>
+									</div>
+								</div>
+
+								<div class="row center">
+									<button class="btn waves-effect waves-light" type="submit" id="submitBtn">Submit
+										<i class="material-icons right">send</i>
+									</button>		
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
