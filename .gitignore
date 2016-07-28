@@ -35,7 +35,12 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+# custom
 materialize-tags
-*temp
+*temp*
+reference
+*_bak*
+.vscode
 
 
