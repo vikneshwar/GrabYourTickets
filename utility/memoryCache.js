@@ -1,15 +1,18 @@
+var config = require('../config.js');
 var cache = {};
-var redis = require('redis');
-var client = redis.createClient();
+if(config.NODE_ENV.toLowerCase() == "dev") {
+	var redis = require('redis');
+	var client = redis.createClient();
 
-client.on('connect',function(){
-	console.log("redis connected");
-});
+	client.on('connect',function(){
+		console.log("redis connected");
+	});
 
-client.get('data',function(err,reply){
-	if(err) console.log(err);
-	if(reply != null) cache = JSON.parse(reply);
-});
+	client.get('data',function(err,reply){
+		if(err) console.log(err);
+		if(reply != null) cache = JSON.parse(reply);
+	});
+}
 
 var memoryCache = function(){
 	return {

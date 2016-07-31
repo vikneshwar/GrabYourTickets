@@ -8,13 +8,13 @@ var notificationCntrl = require('../controller/sendNotification.js');
 // var memoryCache = require('../utility/memoryCache.js');
 //initialize database
 var mongoose = require('mongoose');
-var url = 'mongodb://root:root@ds011228.mlab.com:11228/rejected';
-//var url = 'mongodb://root:root@apollo.modulusmongo.net:27017/jidog7Ex';
-mongoose.connect(url);
+mongoose.promise = require('q').Promise;
+var config = require('../config.js');
+
+mongoose.connect(config.MONGODB_URL);
 var User = require('../models/UserModel.js');
 var fs = require('fs');
 var path = require('path');
-var jquery = fs.readFileSync(path.join(__dirname,'../','resources/jquery.js'),'utf-8');
 
 
 function checkAvailable() {
@@ -27,25 +27,27 @@ function checkAvailable() {
 			$gt: from.toISOString(),
 			$lte: to.toISOString()
 		}
-	},function(err,data){
-		if(err)
-			console.log("Error Processing"+err);
-		else {
-			var urlMapper = {};
-			data.forEach(function(item,index){
-				var url = item._doc.url.split("||");
-				url.forEach(function(urlItem,urlIndex){
-					var userInfo = (urlMapper[urlItem]!=undefined ? urlMapper[urlItem] : []);
-					userInfo.push(item._doc);
-					urlMapper[urlItem] = userInfo;
-				});
+	}).exec()
+	.then(function(data){
+		var urlMapper = {};
+		data.forEach(function(item,index){
+			var url = item._doc.url.split("||");
+			url.forEach(function(urlItem,urlIndex){
+				var userInfo = (urlMapper[urlItem]!=undefined ? urlMapper[urlItem] : []);
+				userInfo.push(item._doc);
+				urlMapper[urlItem] = userInfo;
 			});
-			
-			async.forEachOfSeries(urlMapper,this.processData.bind(this),function(err){
-				console.log("Finished Checking at: "+ Date());
-			});
-		}
-	}.bind(this));
+		});
+
+		async.forEachOfSeries(urlMapper,this.processData.bind(this),function(err){
+			console.log("\nFinished Checking at: "+ Date());
+			process.exit();
+		});
+	}.bind(this))
+	.catch(function(err){
+		console.log("Error Processing"+err);
+	})
+
 }
 
 checkAvailable.prototype.processData = function(record,url,callback){
@@ -55,7 +57,7 @@ checkAvailable.prototype.processData = function(record,url,callback){
 		this.checkCinemas.bind(null,record,url),
 		this.sendNotification,
 		this.deleteData,
-	],this.finalCallback.bind(this));
+		],this.finalCallback.bind(this));
 }
 
 checkAvailable.prototype.sendRequest = function(record,url,cb){
@@ -79,7 +81,7 @@ checkAvailable.prototype.sendRequest = function(record,url,cb){
 		if(err)
 			return cb(err)
 		else if(response.statusCode!="200")
-			return cb(new Error("404 for URL==>"+url));
+			return cb(new Error("404 for URL==>"+url),record);
 		else
 			cb(null,body);
 	});
@@ -127,7 +129,7 @@ checkAvailable.prototype.sendNotification = function(records,cb){
 		if(record.toDelete.length > 0){
 			async.parallel([
 				function(another_cb){
-					if(record.emailId !=null || record.emailId !=undefined) {
+					if(record.emailId != null && record.emailId != undefined && record.emailId.trim() != "") {
 						notificationCntrl.sendEmail(record,function(err,resp){
 							if(err)
 								another_cb(err);
@@ -139,7 +141,7 @@ checkAvailable.prototype.sendNotification = function(records,cb){
 						another_cb(null,null);
 				},
 				function(another_cb){
-					if(record.mobileNumber != null || record.mobileNumber != undefined){
+					if(record.mobileNumber != null && record.mobileNumber != undefined && record.mobileNumber.trim() != ""){
 						notificationCntrl.sendSMS(record,function(err,resp){
 							if(err)
 								another_cb(err);
@@ -154,7 +156,7 @@ checkAvailable.prototype.sendNotification = function(records,cb){
 					else 
 						notifiCallback();
 				}
-			);
+				);
 		}
 		else {
 			notifiCallback();
@@ -168,10 +170,9 @@ checkAvailable.prototype.deleteData = function(records,cb){
 	async.each(records,
 		function(record,callback){
 			if(record.toDelete.length > 0) {
-				User.findById(record._id,function(err,data){
-					if(err)
-						return callback(err);
-					else if(data != undefined || data != null){
+				User.findById(record._id).exec()
+				.then(function(data){
+					if(data != undefined && data != null) {
 						var theaters = data._doc.theater.split(',');
 						var toUpdate = theaters.diff(record.toDelete);
 						var url = "";
@@ -187,33 +188,25 @@ checkAvailable.prototype.deleteData = function(records,cb){
 							} else {
 								url = record.url;
 							}
-							User.findByIdAndUpdate(data._doc._id, {theater: toUpdate,url: url},
-								function(err,doc){
-									if(err) 
-										return callback(err);
-									else {
-										console.log('updated doc:' +doc._doc);
-										callback();
-									}
-							});
+							return User.findByIdAndUpdate(data._doc._id, {theater: toUpdate,url: url}).exec();
 						} else {
-							User.findByIdAndRemove(data._doc._id,function(err,doc){
-								if(err)
-									return callback(err);
-								else {
-									console.log('removed doc:' +doc._doc);
-									callback();
-								}
-							});
+							return User.findByIdAndRemove(data._doc._id).exec();
 						}
-
-					}
-					else 
+					} else {
 						callback();
+					}
+				})
+				.then(function(doc){
+					console.log('updated doc:' +doc._doc);
+					callback();
+				})
+				.catch(function(err){
+					console.log('Error updating doc:' +err);
+					return callback(err);
 				});
 			} else {
 				callback();
-			}
+	 		}
 
 /*			if(record.deleteAll == true){
 				User.findOneAndRemove({
@@ -249,7 +242,7 @@ checkAvailable.prototype.deleteData = function(records,cb){
 						callback();
 					}
 				});
-			}*/
+}*/
 		},
 		function(err){
 			cb(err,records);
@@ -258,13 +251,13 @@ checkAvailable.prototype.deleteData = function(records,cb){
 
 checkAvailable.prototype.finalCallback = function(err,records){
 	if(err)
-		console.log('Error occured in finalCallback: \n'+err+'For record: '+JSON.stringify(records));
+		console.log('\n\nError occured in finalCallback: \n '+err+' \n For record: '+JSON.stringify(records));
 	this.callback();
 }
 
 
 Array.prototype.diff = function(a) {
-    return this.filter(function(i) {return a.indexOf(i) < 0;});
+	return this.filter(function(i) {return a.indexOf(i) < 0;});
 };
 
 new checkAvailable();

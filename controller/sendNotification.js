@@ -1,6 +1,6 @@
 var nodemailer = require('nodemailer')
 var smtpTransport = require('nodemailer-smtp-transport');
-
+var config = require('../config.js')
 var transporter = nodemailer.createTransport(smtpTransport({
 	service: 'gmail',
 	auth: {
@@ -37,12 +37,14 @@ function sendEmail(data,callback){
 var msg91 = require('msg91')("120358AwPrfQEohb657962d68","GYTNOT","4");
 
 function sendSMS(data,callback) {
-	
+	if(config.NODE_ENV.toLowerCase() == "dev")
+		return callback(null,"success");
+
 	var mobileNo = data.mobileNo;
 
 	var cinemasTemplate ="";
 	data.theaterStr.forEach(function(cinemas,index,theaterStr){
-		cinemasTemplate += " " + i + ") "cinemas;
+		cinemasTemplate += " " + i + ") "+cinemas;
 	});
 
 	var message = "Hey , Tickets are open in following theaters" + cinemasTemplate;

@@ -4,7 +4,8 @@
   "description": "just testing out request module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,7 @@
     "mongoose": "*",
     "msg91": "0.0.6",
     "nodemailer": "*",
+    "q": "^1.4.1",
     "request": "*"
   },
   "devDependencies": {

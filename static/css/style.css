@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'SeasideResortNF';
-    src: url('../fonts/SEASRN__.woff') format('woff');
+    src: url('/fonts/SEASRN.woff') format('woff');
 }
 
 #form {
@@ -17,7 +17,7 @@ body {
 }
 html, body {
 	height: 100%;
-	width: 80%
+	width: 100%
 }
 .input-field div.error {
     position: relative;
@@ -140,5 +140,25 @@ html, body {
 
 #logo {
     font-family: "SeasideResortNF, Helvetica, Arial, sans-serif";
-    font-size: 50px;
+    font-size: 42px;
+}
+button#submitBtn:hover {
+    background-color: white;
+    color: black;
+    box-shadow: 0px 0px 0px 2px #f44336;
+}
+.logoContainer {
+    text-align: center;
+}
+
+footer.page-footer {
+    background-color: #c51162;
+    color: white;
+}
+#connect a {
+    color: #FFEB3B;
+}
+
+.footer-copyright {
+    background-color: #880e4f;
 }

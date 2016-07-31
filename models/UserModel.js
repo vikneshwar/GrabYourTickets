@@ -4,6 +4,7 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 	// Objectid = Schema.Type.ObjectId;
+mongoose.promise = require('q').Promise;
 
 var userSchema = new Schema({
 	name: {type:String,required:true},

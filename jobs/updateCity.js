@@ -4,9 +4,13 @@ var async = require('async');
 var redis = require('redis');
 var client = redis.createClient();
 
-client.on('connect',function(){
-	console.log("redis connected");
-});
+var config = require('../config.js');
+if(config.NODE_ENV.toLowerCase() == "dev") {
+	client.on('connect',function(){
+		console.log("redis connected");	
+	});	
+}
+
 /*initialize controller*/
 var getMoviesCtrl = require('../controller/getMovies.js');
 var getCinemasCtrl = require('../controller/getCinemas.js');
@@ -43,14 +47,16 @@ function dataProcessor() {
 		console.log('******************************');
 		console.log('*\tEverything done\t*');
 		console.log('******************************');
-		var dataString = JSON.stringify(data);
-		client.set('data',dataString,function(err,response){
-			if(err) {
-				console.log('Error storing in redis:==> '+err);
-			} else {
-				console.log('done storing in redis:==> '+response);
-			}
-		});
+		if(config.NODE_ENV.toLowerCase() == "dev") {
+			var dataString = JSON.stringify(data);
+			client.set('data',dataString,function(err,response){
+				if(err) {
+					console.log('Error storing in redis:==> '+err);
+				} else {
+					console.log('done storing in redis:==> '+response);
+				}
+			});	
+		}
 	});
 }
 

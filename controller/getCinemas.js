@@ -65,8 +65,6 @@ function cinemasCallback(city,callback,error,response,body) {
 		return callback(error)
 	else {
 		var date = new Date();
-		// var req = this.req;
-		// var res = this.res;
 
 		jsdom.env({
 			html: body,

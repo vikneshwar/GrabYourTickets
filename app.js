@@ -7,10 +7,11 @@ var engines = require('consolidate');
 var getMovies = require('./controller/getMovies.js');
 var getCinemas = require('./controller/getCinemas.js');
 
+//adding configuration file
+var config = require('./config.js');
 //initialize database
-var url = 'mongodb://root:root@ds011228.mlab.com:11228/rejected';
-//var url = 'mongodb://root:root@apollo.modulusmongo.net:27017/jidog7Ex';
-mongoose.connect(url);
+
+mongoose.connect(config.MONGODB_URL);
 var saveController = require('./controller/saveController.js');
  
 var memoryCache = require('./utility/memoryCache.js')();
@@ -35,9 +36,6 @@ app.post('/',saveController);
 app.get('/movie',function(req,res){
 	var city = req.query['city'];
 	var data = memoryCache.get(city);
-	data.cinemaList.forEach(function(item,index){
-		item.code = item.type + "-" + item.code;
-	});
 	if(Object.keys(data.movieList).length >0 && data.cinemaList.length > 0) 
 		res.send(data);
 	else
@@ -64,7 +62,6 @@ app.use(function (err, req, res, next) {//jshint ignore:line
 });
 
 
-var port = process.env.PORT || 8091;
-app.listen(port, function() {
-    console.log('Express server listening on: '+port);
+app.listen(config.WEB_SERVER_PORT, function() {
+    console.log('Express server listening on: '+config.WEB_SERVER_PORT);
 });

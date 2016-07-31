@@ -64,16 +64,17 @@ function saveController(req,res,next) {
 			res.send("You have already registered for same movie on same day");
 		}
 		else {
-
-			user.save(function(err,saved){
+			user.save()
+			.then(function(){
+				/*res.render('index.html',{
+					message: "Thanks ! We will notify you once the tickets are open"
+				});*/
+				res.send("Thanks ! We will notify you once the tickets are open");
+			})
+			.catch(function(){
 				if(err)
-					return next(new Error("Cannot save the information"));
-				else{
-					/*res.render('index.html',{
-						message: "Thanks ! We will notify you once the tickets are open"
-					});*/
-					res.send("Thanks ! We will notify you once the tickets are open");
-				}
+					//return next(new Error("Cannot save the information"));
+					res.send("Oops !! Error Saving Data");
 			});
 		}
 	});
