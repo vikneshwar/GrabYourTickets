@@ -15,11 +15,13 @@
     "bower": "*",
     "cheerio": "^0.20.0",
     "consolidate": "*",
+    "cron": "^1.1.0",
     "express": "*",
     "handlebars": "*",
     "jsdom": "*",
     "mongoose": "*",
     "msg91": "0.0.6",
+    "node-cron": "^1.1.1",
     "nodemailer": "*",
     "q": "^1.4.1",
     "request": "*"
