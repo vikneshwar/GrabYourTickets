@@ -1,11 +1,12 @@
 var fs = require('fs');
 var memoryCache = require('../utility/memoryCache.js')();
 var async = require('async');
-var redis = require('redis');
-var client = redis.createClient();
+
 
 var config = require('../config.js');
 if(config.NODE_ENV.toLowerCase() == "dev") {
+	var redis = require('redis');
+	var client = redis.createClient();
 	client.on('connect',function(){
 		console.log("redis connected");	
 	});	
