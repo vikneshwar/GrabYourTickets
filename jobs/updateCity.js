@@ -58,6 +58,7 @@ function dataProcessor() {
 				}
 			});	
 		}
+		process.exit();
 	});
 }
 

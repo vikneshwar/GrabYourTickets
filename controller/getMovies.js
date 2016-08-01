@@ -44,7 +44,7 @@ function movieCallback(city, callback, error, response, body) {
         var $ = cheerio.load(body);
         var monthArr = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
         /*added for movies in now showing tab*/
-        $($.find('#now-showing div.movie-card-container[data-selector="movies"]')).each(function() {
+        $($('body').find('#now-showing div.movie-card-container[data-selector="movies"]')).each(function() {
             var movieName = $(this).attr('data-search-filter').slice(7);
             //var url = $.find('.movie-card .card-container .book-button a').attr('href');
 

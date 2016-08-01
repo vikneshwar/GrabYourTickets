@@ -74,7 +74,7 @@ function cinemasCallback(city,callback,error,response,body) {
 					return callback(err);
 				var $ = window.$;
 				var cinemaList = [];
-				$($.find('.cinema-brand-list .__cinema-tiles')).each(function(){
+				$($('body').find('.cinema-brand-list .__cinema-tiles')).each(function(){
 					var cinemaName = $(this).find('.__cinema-info .__cinema-text a').html();
 					var cinemaCode = $(this).find('.__cinema-info .__cinema-text a').attr('href').split('/');
 					cinemaCode = cinemaCode[cinemaCode.length-1];
