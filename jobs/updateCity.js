@@ -58,7 +58,7 @@ function dataProcessor() {
 				}
 			});	
 		}
-
+		global.gc();
 	});
 }
 
