@@ -58,7 +58,7 @@ function dataProcessor() {
 				}
 			});	
 		}
-		process.exit();
+
 	});
 }
 
@@ -102,4 +102,5 @@ dataProcessor.prototype.getCinemas = function(city,callback) {
 		callback(null,data);
 	});
 }
-new dataProcessor();
+
+module.exports = dataProcessor;

@@ -7,6 +7,9 @@ var engines = require('consolidate');
 var getMovies = require('./controller/getMovies.js');
 var getCinemas = require('./controller/getCinemas.js');
 
+var updateCity = require('./jobs/updateCity');
+
+
 //adding configuration file
 var config = require('./config.js');
 //initialize database
@@ -15,7 +18,9 @@ mongoose.connect(config.MONGODB_URL);
 var saveController = require('./controller/saveController.js');
  
 var memoryCache = require('./utility/memoryCache.js')();
-
+if(config.NODE_ENV.toLowerCase() == "prod") {
+	new updateCity();
+}
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -43,9 +48,10 @@ app.get('/movie',function(req,res){
 });
 
 app.get('/updateCity',function(req,res){
-	require('./jobs/updateCity');
+	new updateCity();
 	res.send('Started Updating');
 });
+
 /* Define fallback route */
 app.use(function(req, res, next) {//jshint ignore:line
     res.status(404).json({
