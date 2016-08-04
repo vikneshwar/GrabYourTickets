@@ -44,7 +44,7 @@ function sendSMS(data,callback) {
 
 	var cinemasTemplate ="";
 	data.theaterStr.forEach(function(cinemas,index,theaterStr){
-		cinemasTemplate += " " + i + ") "+cinemas;
+		cinemasTemplate += " " + (index+1) + ") "+cinemas;
 	});
 
 	var message = "Hey , Tickets are open in following theaters" + cinemasTemplate;
