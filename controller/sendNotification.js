@@ -46,14 +46,14 @@ function sendSMS(data,callback) {
 	data.theaterStr.forEach(function(cinemas,index,theaterStr){
 		cinemasTemplate += " " + (index+1) + ") "+cinemas;
 	});
-
+	/*
 	var message = "Hey , Tickets are open in following theaters" + cinemasTemplate;
 	msg91.send(mobileNo,message,function(err,response){
 		console.log("\n MSG91 Error:" +err);
 		console.log("\n MSG91 Response:" +response);
 		return callback(err,response)	
 	});
-	
+	*/
 }
 
 module.exports = {
