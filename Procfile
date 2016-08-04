@@ -1,1 +1,1 @@
-clock: node clock.js
+clock: node --expose-gc clock.js

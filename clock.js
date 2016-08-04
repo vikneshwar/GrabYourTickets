@@ -1,7 +1,11 @@
 var CronJob = require('cron').CronJob;
 
+var checkAvailable = require('./jobs/checkAvailable.js');
 var job = new CronJob({
 	cronTime: '*/15 * * * *',
-	onTick: require('./jobs/checkAvailable.js')(),
+	onTick: checkAvailable.initiateCheck,
 	start: true
 });
+
+
+job.start();

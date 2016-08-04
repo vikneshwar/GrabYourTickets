@@ -58,23 +58,23 @@ function saveController(req,res,next) {
 		if(err) 
 			return next(err);
 		else if(isExist){
-			/*res.render('index.html',{
+			res.render('index.html',{
 				message: "You have already registered for same movie on same day"
-			});*/
-			res.send("You have already registered for same movie on same day");
+			});
+			// res.send("You have already registered for same movie on same day");
 		}
 		else {
 			user.save()
 			.then(function(){
-				/*res.render('index.html',{
+				res.render('index.html',{
 					message: "Thanks ! We will notify you once the tickets are open"
-				});*/
-				res.send("Thanks ! We will notify you once the tickets are open");
+				});
+				// res.send("Thanks ! We will notify you once the tickets are open");
 			})
 			.catch(function(){
 				if(err)
-					//return next(new Error("Cannot save the information"));
-					res.send("Oops !! Error Saving Data");
+					return next(new Error("Cannot save the information"));
+					// res.send("Oops !! Error Saving Data");
 			});
 		}
 	});

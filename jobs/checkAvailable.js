@@ -16,8 +16,17 @@ var User = require('../models/UserModel.js');
 var fs = require('fs');
 var path = require('path');
 
+const checkAvailable = {
+	initiateCheck: initiateCheck/*,
+	processData: processData,
+	sendRequest: sendRequest,
+	checkCinemas: checkCinemas,
+	sendNotification: sendNotification,
+	deleteData: deleteData,
+	finalCallback: finalCallback*/
+}
 
-function checkAvailable() {
+function initiateCheck() {
 	var from = new Date();
 	var to = new Date();
 	to.setDate(to.getDate()+14);
@@ -39,28 +48,28 @@ function checkAvailable() {
 			});
 		});
 
-		async.forEachOfSeries(urlMapper,this.processData.bind(this),function(err){
+		async.forEachOfSeries(urlMapper,processData.bind(this),(err) => {
 			console.log("\nFinished Checking at: "+ Date());
-			process.exit();
+			global.gc();
 		});
 	}.bind(this))
-	.catch(function(err){
+	.catch((err) => {
 		console.log("Error Processing"+err);
 	})
 
 }
 
-checkAvailable.prototype.processData = function(record,url,callback){
+function processData(record,url,callback){
 	this.callback = callback;
 	async.waterfall([
-		this.sendRequest.bind(null,record,url),
-		this.checkCinemas.bind(null,record,url),
-		this.sendNotification,
-		this.deleteData,
-		],this.finalCallback.bind(this));
+		sendRequest.bind(null,record,url),
+		checkCinemas.bind(null,record,url),
+		sendNotification,
+		deleteData,
+		],finalCallback.bind(this));
 }
 
-checkAvailable.prototype.sendRequest = function(record,url,cb){
+function sendRequest(record,url,cb){
 		//TODO: Handle Multiple URL'S
 
 		var options = {
@@ -77,7 +86,7 @@ checkAvailable.prototype.sendRequest = function(record,url,cb){
 			gzip: true
 		};
 	// var scope = Object.create(this);
-	makeRequest(options,function(err,response,body){
+	makeRequest(options,(err,response,body) => {
 		if(err)
 			return cb(err)
 		else if(response.statusCode!="200")
@@ -87,16 +96,16 @@ checkAvailable.prototype.sendRequest = function(record,url,cb){
 	});
 }
 
-checkAvailable.prototype.checkCinemas = function(record,url,body,cb){
+function checkCinemas(record,url,body,cb){
 	var $ = cheerio.load(body);
 	var count;
 	var toDelete = [];
-	record.forEach(function(v,i){
+	record.forEach((v,i) => {
 		var cinemasList = v.theater.split(',');
 		var toDelete = [];
 		var orgCode;
 		var theaterStr = [];
-		cinemasList.forEach(function(code,index){
+		cinemasList.forEach((code,index) => {
 			if(url.indexOf('spicinemas') >-1){
 				if(code.startsWith('SPI')){
 					toDelete.push(code);
@@ -124,13 +133,13 @@ checkAvailable.prototype.checkCinemas = function(record,url,body,cb){
 	});
 	cb(null,record);
 }
-checkAvailable.prototype.sendNotification = function(records,cb){
-	async.each(records,function(record,notifiCallback){
+ function sendNotification(records,cb){
+	async.each(records,(record,notifiCallback) => {
 		if(record.toDelete.length > 0){
 			async.parallel([
 				function(another_cb){
 					if(record.emailId != null && record.emailId != undefined && record.emailId.trim() != "") {
-						notificationCntrl.sendEmail(record,function(err,resp){
+						notificationCntrl.sendEmail(record,(err,resp) => {
 							if(err)
 								another_cb(err);
 							else 
@@ -142,7 +151,7 @@ checkAvailable.prototype.sendNotification = function(records,cb){
 				},
 				function(another_cb){
 					if(record.mobileNumber != null && record.mobileNumber != undefined && record.mobileNumber.trim() != ""){
-						notificationCntrl.sendSMS(record,function(err,resp){
+						notificationCntrl.sendSMS(record,(err,resp) => {
 							if(err)
 								another_cb(err);
 							else
@@ -166,12 +175,12 @@ checkAvailable.prototype.sendNotification = function(records,cb){
 	});
 }
 
-checkAvailable.prototype.deleteData = function(records,cb){
+function deleteData(records,cb){
 	async.each(records,
-		function(record,callback){
+		(record,callback) => {
 			if(record.toDelete.length > 0) {
 				User.findById(record._id).exec()
-				.then(function(data){
+				.then((data) => {
 					if(data != undefined && data != null) {
 						var theaters = data._doc.theater.split(',');
 						var toUpdate = theaters.diff(record.toDelete);
@@ -196,11 +205,11 @@ checkAvailable.prototype.deleteData = function(records,cb){
 						callback();
 					}
 				})
-				.then(function(doc){
+				.then((doc) => {
 					console.log('updated doc:' +doc._doc);
 					callback();
 				})
-				.catch(function(err){
+				.catch((err) => {
 					console.log('Error updating doc:' +err);
 					return callback(err);
 				});
@@ -249,7 +258,7 @@ checkAvailable.prototype.deleteData = function(records,cb){
 	});
 }
 
-checkAvailable.prototype.finalCallback = function(err,records){
+function finalCallback(err,records){
 	if(err)
 		console.log('\n\nError occured in finalCallback: \n '+err+' \n For record: '+JSON.stringify(records));
 	this.callback();

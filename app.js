@@ -41,10 +41,11 @@ app.post('/',saveController);
 app.get('/movie',function(req,res){
 	var city = req.query['city'];
 	var data = memoryCache.get(city);
+
 	if(Object.keys(data.movieList).length >0 && data.cinemaList.length > 0) 
 		res.send(data);
 	else
-		res.send('Sorry for inconvience , some error occured');
+		res.send({error:"error getting data"});
 });
 
 app.get('/updateCity',function(req,res){

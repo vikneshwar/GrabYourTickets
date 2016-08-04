@@ -168,3 +168,11 @@ footer.page-footer {
 .footer-copyright {
     background-color: #880e4f;
 }
+
+html, body {
+    overflow-x: hidden;
+}
+#errorModal .modal-footer a{
+    margin-left: 4px;
+    margin-right: 4px;
+} 
