@@ -81,8 +81,11 @@ dataProcessor.prototype.updateRegistry = function(city,err,finalData){
 		/*var data={};
 		data.movieList = finalData[0];
 		data.cinemaList = finalData[1];*/
+		var scrapedData = {};
+		scrapedData.movieList = finalData[0];
+		scrapedData.cinemaList = finalData[1];
 		var data = "";
-		data = JSON.stringify(data);
+		data = JSON.stringify(scrapedData);
 		memoryCache.set(city,data);
 		this.callback();
 	}
