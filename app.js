@@ -40,7 +40,7 @@ app.post('/',saveController);
 
 app.get('/movie',function(req,res){
 	var city = req.query['city'];
-	var data = memoryCache.get(city);
+	var data = JSON.parse(memoryCache.get(city));
 
 	if(Object.keys(data.movieList).length >0 && data.cinemaList.length > 0) 
 		res.send(data);

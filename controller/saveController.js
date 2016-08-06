@@ -14,7 +14,7 @@ function saveController(req,res,next) {
 	// var day = date.chartAt(0);
 	// var month = monthArr.indexOf(date.slice(2,date.indexOf(",")));
 	// var year = date.slice(-4);
-	var cityData = memoryCache.get(city);
+	var cityData = JSON.parse(memoryCache.get(city));
 	var urlList = cityData.movieList[movie].url;
 	
 	date = new Date(date);
