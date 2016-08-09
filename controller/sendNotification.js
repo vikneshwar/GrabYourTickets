@@ -4,8 +4,8 @@ var config = require('../config.js')
 var transporter = nodemailer.createTransport(smtpTransport({
 	service: 'gmail',
 	auth: {
-		user: 'mailtester1993@gmail.com',
-		pass: '#MAILtester123'
+		user: config.EMAIL_ID,
+		pass: config.EMAIL_PASS
 	}
 }));
 //('smtps://mailtester1993%40gmail.com:#MAILtester123@smtp.gmail.com');

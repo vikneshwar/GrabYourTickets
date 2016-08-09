@@ -37,7 +37,7 @@ function initiateCheck() {
 
 	User.find({
 		"date": {
-			$gt: from.toISOString(),
+			$gte: from.toISOString(),
 			$lte: to.toISOString()
 		}
 	}).exec()
@@ -220,6 +220,7 @@ function deleteData(records,cb){
 					return callback(err);
 				});
 			} else {
+				console.log('\n Nothing to notify');
 				callback();
 	 		}
 
