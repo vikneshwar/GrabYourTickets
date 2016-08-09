@@ -2,6 +2,7 @@ var User = require('../models/UserModel.js');
 var async = require('async');
 var memoryCache = require('../utility/memoryCache.js')();
 
+var config = require('../config.js');
 function saveController(req,res,next) {
 	var city = req.body.city;
 	var movie = req.body.movie;
@@ -14,7 +15,11 @@ function saveController(req,res,next) {
 	// var day = date.chartAt(0);
 	// var month = monthArr.indexOf(date.slice(2,date.indexOf(",")));
 	// var year = date.slice(-4);
-	var cityData = JSON.parse(memoryCache.get(city));
+	if(config.NODE_ENV.toLowerCase() == "prod")	
+		var cityData = JSON.parse(memoryCache.get(city));
+	else
+		var cityData = memoryCache.get(city);
+
 	var urlList = cityData.movieList[movie].url;
 	
 	date = new Date(date);

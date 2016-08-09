@@ -1,5 +1,5 @@
 
-console.log("Started Checking at: "+ Date());
+
 //var jsdom = require('jsdom');
 var cheerio = require('cheerio');
 var async = require('async');
@@ -11,7 +11,10 @@ var mongoose = require('mongoose');
 mongoose.promise = require('q').Promise;
 var config = require('../config.js');
 
-mongoose.connect(config.MONGODB_URL);
+mongoose.connect(config.MONGODB_URL,function(err){
+	if(err) 
+		console.log('Error Connecting to Databse \n'+err.stack);
+});
 var User = require('../models/UserModel.js');
 var fs = require('fs');
 var path = require('path');
@@ -27,6 +30,7 @@ const checkAvailable = {
 }
 
 function initiateCheck() {
+	console.log("Started Checking at: "+ Date());
 	var from = new Date();
 	var to = new Date();
 	to.setDate(to.getDate()+14);
@@ -54,12 +58,13 @@ function initiateCheck() {
 		});
 	}.bind(this))
 	.catch((err) => {
-		console.log("Error Processing"+err);
+		console.log("Error Processing \n"+err.stack());
 	})
 
 }
 
 function processData(record,url,callback){
+	console.log('\n Checking URL --> '+url);
 	this.callback = callback;
 	async.waterfall([
 		sendRequest.bind(null,record,url),
@@ -74,26 +79,27 @@ function sendRequest(record,url,cb){
 
 		var options = {
 			url: url ,
-			followRedirect: false,
+			followRedirect: true,
 			headers: {
 				'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:37.0) Gecko/20100101 Firefox/37.0',
 				'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
 				'Accept-Language': 'en-US,en;q=0.5',
 				'Accept-Encoding': 'gzip, deflate',
 				'Cache-Control':'no-cache',
-				'Pragma':'no-cache'
+				'Pragma':'no-cache',
+				'Referer': url
 			},
 			gzip: true
 		};
 	// var scope = Object.create(this);
-	makeRequest(options,(err,response,body) => {
+	makeRequest(options,((url,err,response,body) => {
 		if(err)
 			return cb(err)
-		else if(response.statusCode!="200")
+		else if(response.statusCode!="200" || url !== response.request.href)
 			return cb(new Error("404 for URL==>"+url),record);
 		else
 			cb(null,body);
-	});
+	}).bind(this,url));
 }
 
 function checkCinemas(record,url,body,cb){

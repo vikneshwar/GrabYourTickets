@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> Log a Issue</title>
+	<meta name="theme-color" content="#00bcd4">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style type="text/css">
+    	html {
+			display: table;
+			margin: auto;
+		}
+		body {
+			display: table-cell;
+			vertical-align: middle;
+		}
+		html, body {
+			height: 100%;
+			width: 100%;
+		}
+
+    	#submitBtn{
+    		background-color: #ff5a92;
+    	}
+    	label.active, .material-icons.active {
+    		color: #ff5a92 !important;
+    	}
+    	#issue_input:focus {
+    		border-bottom: 1px solid #ff5a92 !important;    		
+    		box-shadow: 0 1px 0 0 #ff5a92;
+    	}
+    	.description {
+    		font-style: italic;
+    	}
+    </style>
+</head>
+<body class="cyan">
+	<div class="container">
+		<div class="section">
+			<div class="row">
+				<div class="col s12">
+				{{#if message}}
+					<div class="card-panel grey z-depth-3">
+						<span class="white-text">
+							{{message}}
+						</span>	
+					</div>
+					{{/if}}
+					<div class="card-panel z-depth-3">
+						<div class="row">
+							<form class="col s12" method="post" action="/logissue" id="issue_form">
+								<div class="row">
+									<div class="input-field col s12 center">
+										<h4>Found a Issue ?</h4>
+									</div>
+								</div>
+								<div class="row">
+									<div class="input-field col s12">
+										<i class="material-icons prefix">error</i>
+										<textarea class="materialize-textarea" id="issue_input" name="issue_input" form="issue_form"></textarea>
+										<label for="issue_input">Issue</label>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="input-field col s12">
+										<!-- <i class="material-icons prefix">note</i> -->
+										<p class="description"><b>Note</b>: Hey , Please mention the issue in detail , with the movie you tried to book , city , theater and date . Thanks !! 
+									</div>
+								</div>
+								<div class="row center">
+									<button class="btn waves-effect waves-light" type="submit" id="submitBtn">Submit
+										<i class="material-icons right">send</i>
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

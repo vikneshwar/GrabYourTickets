@@ -40,7 +40,7 @@ $(function() {
 
 
     var movieEngine = new Bloodhound({
-        datumTokenizer: Bloodhound.tokenizers.whitespace,
+        datumTokenizer: Bloodhound.tokenizers.nonword,
         queryTokenizer: Bloodhound.tokenizers.whitespace,
         local: movies
     });
@@ -76,7 +76,7 @@ $(function() {
     });
 
     var cinemaList = [];
-    $('#city').on('blur', function(ev) {
+    $('#city').bind('typeahead:select', function(ev,suggestion) {
         if ($(ev.target).val().trim() == "")
             $('#city_error').html("Please select a city");
         else {
@@ -92,7 +92,7 @@ $(function() {
             });
             jqxhr.done(function(data) {
                 if(data.hasOwnProperty("error") && data.error != undefined)
-                    $('#errorModal').openModal();
+                    $('#noDataModal').openModal();
                 else {
                     movieEngine.add(Object.keys(data.movieList));
                     /*var theaters=[];
@@ -104,12 +104,27 @@ $(function() {
                     });
                     cinemaList = data.cinemaList;
                     cinemaEngine.add(data.cinemaList);    
-                }
-                
+                }       
+            });
+
+            jqxhr.fail(function(jqxhr, status, error){
+                $('#sysErrorModal p').html(jqxhr.responseJSON.message || error);
+                $('#sysErrorModal').openModal();
             });
         }
         console.log("city changed");
     });
+
+    $(document).on({
+        mouseenter: function(e) {
+            $(e.target).addClass('tt-cursor');
+            $(e.target).siblings().removeClass('tt-cursor');
+
+        },
+        mouseleave: function(e){
+            $(e.target).removeClass('tt-cursor');
+        }
+    },'.tt-selectable');
 
 
     var movie_typeahead = $('#movie').typeahead({

@@ -23,7 +23,7 @@ body {
 }
 html, body {
 	height: 100%;
-	width: 100%
+	width: 100%;
 }
 .input-field div.error {
     position: relative;
@@ -172,7 +172,11 @@ footer.page-footer {
 html, body {
     overflow-x: hidden;
 }
-#errorModal .modal-footer a{
+#errorModal .modal-footer a, #sysErrorModal .modal-footer a{
     margin-left: 4px;
     margin-right: 4px;
 } 
+
+.description {
+    margin-left: 25px;
+}

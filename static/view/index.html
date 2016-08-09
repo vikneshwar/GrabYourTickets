@@ -38,7 +38,7 @@
 			<div class="row">
 				<div class="col s12">
 					{{#if message}}
-					<div class="card-panel yellow darken-4 z-depth-3">
+					<div class="card-panel indigo z-depth-3">
 						<span class="white-text">
 							{{message}}
 						</span>	
@@ -125,9 +125,19 @@
 			</div>
 		</div>
 	</div>
-	<div id="errorModal" class="modal">
+	<div id="noDataModal" class="modal">
 		<div class="modal-content">
 			<p>Hey, seems there are no movies available in your city. Please, try again later sometime or feel free to log a issue. </p>
+		</div>
+		<div class="modal-footer">
+			<a href="#" class="modal-action modal-close waves-effect grey darken-1 btn">Close</a>
+			<a href="#" class="modal-action waves-effect red darken-3 btn">Log Issue</a>
+		</div>
+	</div>
+
+	<div id="sysErrorModal" class="modal">
+		<div class="modal-content">
+			<p></p>
 		</div>
 		<div class="modal-footer">
 			<a href="#" class="modal-action modal-close waves-effect grey darken-1 btn">Close</a>
@@ -149,7 +159,7 @@
 					<h5 class="">Found a Issue ?</h5>
 					<p class="">No one writes a perfect code , so if you find any issues - like 
 					if you dint get notification on time, feel free to log a issue</p>
-					<a class="btn waves-effect waves-light" href="#">Log Issue</a>
+					<a class="btn waves-effect waves-light" href="/logissue" target="_blank">Log Issue</a>
 				</div>
 
 				<div class="col l4 s12 center" id="connect">

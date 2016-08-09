@@ -4,8 +4,7 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
 
-var getMovies = require('./controller/getMovies.js');
-var getCinemas = require('./controller/getCinemas.js');
+var router = require('./routes/routes.js');
 
 var updateCity = require('./jobs/updateCity');
 
@@ -15,9 +14,7 @@ var config = require('./config.js');
 //initialize database
 
 mongoose.connect(config.MONGODB_URL);
-var saveController = require('./controller/saveController.js');
- 
-var memoryCache = require('./utility/memoryCache.js')();
+
 if(config.NODE_ENV.toLowerCase() == "prod") {
 	new updateCity();
 }
@@ -32,26 +29,7 @@ app.set('view engine', 'html');
 
 app.use('/',express.static(__dirname + '/static'));
 
-app.get('/',function(req,res){
-	res.render('index.html');
-});
-
-app.post('/',saveController);
-
-app.get('/movie',function(req,res){
-	var city = req.query['city'];
-	var data = JSON.parse(memoryCache.get(city));
-
-	if(Object.keys(data.movieList).length >0 && data.cinemaList.length > 0) 
-		res.send(data);
-	else
-		res.send({error:"error getting data"});
-});
-
-app.get('/updateCity',function(req,res){
-	new updateCity();
-	res.send('Started Updating');
-});
+app.use('/',router);
 
 /* Define fallback route */
 app.use(function(req, res, next) {//jshint ignore:line
@@ -63,8 +41,8 @@ app.use(function(req, res, next) {//jshint ignore:line
 /* Define error handler */
 app.use(function (err, req, res, next) {//jshint ignore:line
     // logger.logFullError(err, req.method + " " + req.url);
-    res.status(err.httpStatus || 500).render('index.html',{
-		message: err + " Sorry for inconvience, please try again later , contact us if issue still persist"
+    res.status(err.httpStatus || 500).send({
+		message: err + " Sorry for inconvience, please try again later. Feel free to log the issue."
 	});
 });
 
