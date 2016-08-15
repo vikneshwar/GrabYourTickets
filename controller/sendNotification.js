@@ -42,7 +42,7 @@ function sendEmail(data,callback){
 	});
 }
 
-var msg91 = require('msg91')(config.MSG_API_KEY,"GYTNOT","4");
+var msg91 = require('msg91')(config.MSG_API_KEY,"VERIFY","4");
 
 function sendSMS(data,callback) {
 	/*if(config.NODE_ENV.toLowerCase() == "dev")
