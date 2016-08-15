@@ -80,6 +80,7 @@ $(function() {
         if ($(ev.target).val().trim() == "")
             $('#city_error').html("Please select a city");
         else {
+            $('#overlay-container').css('display','block');
             cinemaEngine.clear();
             movieEngine.clear();
             $('#city_error').html("");
@@ -104,10 +105,12 @@ $(function() {
                     });
                     cinemaList = data.cinemaList;
                     cinemaEngine.add(data.cinemaList);    
+                    $('#overlay-container').css('display','none');
                 }       
             });
 
             jqxhr.fail(function(jqxhr, status, error){
+                $('#overlay-container').css('display','none');
                 $('#sysErrorModal p').html(jqxhr.responseJSON.message || error);
                 $('#sysErrorModal').openModal();
             });

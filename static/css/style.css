@@ -3,10 +3,11 @@
     src: url('../fonts/SEASRN.eot');
     src: url('../fonts/SEASRN.eot?#iefix') format('embedded-opentype'),
          url('../fonts/SEASRN.woff') format('woff'),
-         url('../fonts/SEASRN.ttf') format('truetype'),
+         url('../fonts/SEASRN__.ttf') format('truetype'),
          url('../fonts/SEASRN.svg#seasideresortnfregular') format('svg');
     font-weight: normal;
     font-style: normal;
+
 }
 
 #form {
@@ -179,4 +180,24 @@ html, body {
 
 .description {
     margin-left: 25px;
+}
+
+#overlay-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0,0,0,.5);
+    display: none;
+    z-index: 9999;
+}
+
+#loadingMask {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
 }

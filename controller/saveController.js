@@ -15,11 +15,11 @@ function saveController(req,res,next) {
 	// var day = date.chartAt(0);
 	// var month = monthArr.indexOf(date.slice(2,date.indexOf(",")));
 	// var year = date.slice(-4);
-	if(config.NODE_ENV.toLowerCase() == "prod")	
+	// if(config.NODE_ENV.toLowerCase() == "prod")	
 		var cityData = JSON.parse(memoryCache.get(city));
-	else
+	/*else
 		var cityData = memoryCache.get(city);
-
+*/
 	var urlList = cityData.movieList[movie].url;
 	
 	date = new Date(date);

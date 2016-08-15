@@ -32,13 +32,15 @@ const checkAvailable = {
 function initiateCheck() {
 	console.log("Started Checking at: "+ Date());
 	var from = new Date();
+	from.setDate(from.getDate()-1);
+	// from.setUTCHours(0,0,0,0);
 	var to = new Date();
 	to.setDate(to.getDate()+14);
 
 	User.find({
 		"date": {
-			$gte: from.toISOString(),
-			$lte: to.toISOString()
+			$gt: new Date(from.toISOString()),
+			$lte: new Date(to.toISOString())
 		}
 	}).exec()
 	.then(function(data){

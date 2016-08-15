@@ -36,7 +36,8 @@ var spicinemasChennai = [
 var spicinemasCoimbatore = [
 	{
 		cinema: 'The Cinema',
-		type : 'SPI'
+		type : 'SPI',
+		code: 'THE-CINEMAS'
 	}
 ];
 function getCinemas(city,callback){

@@ -6,14 +6,24 @@ var config = require('../config.js');
 var memoryCache = require('../utility/memoryCache.js')();
 
 var nodemailer = require('nodemailer')
-var smtpTransport = require('nodemailer-smtp-transport');
+/*var smtpTransport = require('nodemailer-smtp-transport');
 var transporter = nodemailer.createTransport(smtpTransport({
 	service: 'gmail',
 	auth: {
 		user: config.EMAIL_ID,
 		pass: config.EMAIL_PASS
 	}
-}));
+}));*/
+
+var mg = require('nodemailer-mailgun-transport');
+var auth = {
+  auth: {
+    api_key: config.MAIL_GUN_KEY,
+    domain: 'mg.grabyourtickets.in'
+  }
+}
+var transporter = nodemailer.createTransport(mg(auth));
+
 
 router.get('/',function(req,res){
 	res.render('index.html');
@@ -42,10 +52,10 @@ router.post('/logissue',function(req,res,next){
 });
 router.get('/movie',function(req,res,next){
 	var city = req.query['city'];
-	if(config.NODE_ENV.toLowerCase() == "prod")	
+	// if(config.NODE_ENV.toLowerCase() == "prod")	
 		var data = JSON.parse(memoryCache.get(city));
-	else
-		var data = memoryCache.get(city);
+	// else
+		// var data = memoryCache.get(city);
 
 	if(Object.keys(data.movieList).length >0 && data.cinemaList.length > 0) 
 		res.send(data);
@@ -55,8 +65,12 @@ router.get('/movie',function(req,res,next){
 });
 
 router.get('/updateCity',function(req,res){
-	new updateCity();
-	res.send('Started Updating');
+	if(req.query['secret'] === config.SECRET_TO_UPDATE) {
+		new updateCity();
+		res.send('Started Updating');	
+	} else {
+		res.send('Cant Update');
+	}
 });
 
 module.exports = router

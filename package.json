@@ -26,6 +26,7 @@
     "msg91": "0.0.6",
     "node-cron": "^1.1.1",
     "nodemailer": "*",
+    "nodemailer-mailgun-transport": "^1.2.1",
     "q": "^1.4.1",
     "request": "*"
   },
