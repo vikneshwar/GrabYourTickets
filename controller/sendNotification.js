@@ -55,7 +55,7 @@ function sendSMS(data,callback) {
 		cinemasTemplate += " " + (index+1) + ") "+cinemas;
 	});
 	
-	var message = "Hey , Tickets are open in following theaters: " + cinemasTemplate;
+	var message = "Hey , Tickets are open in following theaters: " + cinemasTemplate + " for the movie: " +data.movie;
 	msg91.send(mobileNo,message,function(err,response){
 		console.log("\n MSG91 Error:" +err);
 		console.log("\n MSG91 Response:" +response);

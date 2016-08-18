@@ -4,5 +4,8 @@ module.exports = {
 	NODE_ENV: process.env.NODE_ENV,
 	MAIL_GUN_KEY: process.env.MAIL_GUN_KEY,
 	SECRET_TO_UPDATE: process.env.SECRET_TO_UPDATE,
-	MSG_API_KEY: process.env.MSG_API_KEY
+	MSG_API_KEY: process.env.MSG_API_KEY,
+	CAPTCHA_PUBLIC_KEY: process.env.CAPTCHA_PUBLIC_KEY,
+	CAPTCHA_PRIVATE_KEY: process.env.CAPTCHA_PRIVATE_KEY
+
 }

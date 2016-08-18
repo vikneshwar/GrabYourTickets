@@ -5,7 +5,13 @@ var saveController = require('../controller/saveController.js');
 var config = require('../config.js');
 var memoryCache = require('../utility/memoryCache.js')();
 
-var nodemailer = require('nodemailer')
+var nodemailer = require('nodemailer');
+var Recaptcha = require('recaptcha2');
+
+var recaptcha = new Recaptcha({
+	siteKey: config.CAPTCHA_PUBLIC_KEY,
+	secretKey: config.CAPTCHA_PRIVATE_KEY
+});
 /*var smtpTransport = require('nodemailer-smtp-transport');
 var transporter = nodemailer.createTransport(smtpTransport({
 	service: 'gmail',
@@ -29,24 +35,44 @@ router.get('/',function(req,res){
 	res.render('index.html');
 });
 
-router.post('/',saveController);
+router.post('/',function(req,res,next){
+	recaptcha.validateRequest(req)
+	.then(function(){
+		saveController(req,res,next);
+	})
+	.catch(function(error){
+		console.log(recaptcha.translateErrors(error));
+		res.render('index.html',{
+			message: 'Error Validating your reCaptcha . Please try again'
+		});
+	});
+});
 
 router.get('/logissue',function(req,res,next){
 	res.render('issue.html');
 });
 router.post('/logissue',function(req,res,next){
-	var message = req.body.issue_input;
-	var mailOptions = {
-		from: '"Vikneshwar" <mailtester1993@gmail.com>' ,
-		to: 'lviknesh@gmail.com', 
-		subject: 'Issue Logged',
-		html: message
-	}
-	transporter.sendMail(mailOptions,function(err,info){
-		if(err)
-			console.log('\n Error sending issue:'+err);
+	recaptcha.validateRequest(req)
+	.then(function(){
+		var message = req.body.issue_input;
+		var mailOptions = {
+			from: '"Vikneshwar" <mailtester1993@gmail.com>' ,
+			to: 'lviknesh@gmail.com', 
+			subject: 'Issue Logged',
+			html: message
+		}
+		transporter.sendMail(mailOptions,function(err,info){
+			if(err)
+				console.log('\n Error sending issue:'+err);
+			res.render('issue.html',{
+				message: 'Thanks , We will look into the issue as soon as possible'
+			});
+		});
+	})
+	.catch(function(error){
+		console.log(recaptcha.translateErrors(error));
 		res.render('issue.html',{
-			message: 'Thanks , We will look into the issue as soon as possible'
+			message: 'Error Validating your reCaptcha . Please try again'
 		});
 	});
 });

@@ -38,7 +38,35 @@
     	.description {
     		font-style: italic;
     	}
+    	.g-recaptcha div {
+    		display: inline;
+		}
+		.input-field div.error {
+    		position: relative;
+    		top: 0rem;
+    		left: 3rem;
+    		font-size: 0.8rem;
+    		color: #FF4081;
+    		-webkit-transform: translateY(0%);
+    		-ms-transform: translateY(0%);
+    		-o-transform: translateY(0%);
+    		transform: translateY(0%);
+		}
     </style>
+
+    <script type="text/javascript">
+    $(function(){
+    	$('#issue_form').submit(function(event) {
+    		var captchaResponse = grecaptcha.getResponse();
+    		if( captchaResponse === undefined || captchaResponse === null || captchaResponse.trim() === ""){
+    			$("#captcha_error").html("Please confirm that you are a human");
+    			return false;
+    		}	
+    		return true;
+    	});
+    });
+    
+    </script>
 </head>
 <body class="cyan">
 	<div class="container">
@@ -63,8 +91,16 @@
 								<div class="row">
 									<div class="input-field col s12">
 										<i class="material-icons prefix">error</i>
-										<textarea class="materialize-textarea" id="issue_input" name="issue_input" form="issue_form"></textarea>
+										<textarea class="materialize-textarea validate" id="issue_input" name="issue_input" form="issue_form" required></textarea>
 										<label for="issue_input">Issue</label>
+									</div>
+								</div>
+
+								<div class="row center">
+									<div class="input-field col s12">
+										<span>Confirm that you are a human:</span>
+										<div class="g-recaptcha" data-sitekey="6LeoyicTAAAAANpY7uCRo7mpJsUjz1VN_KaKTlTa"></div>
+										<div id="captcha_error" class="error left"></div>
 									</div>
 								</div>
 
@@ -74,6 +110,7 @@
 										<p class="description"><b>Note</b>: Hey , Please mention the issue in detail , with the movie you tried to book , city , theater and date . Thanks !! 
 									</div>
 								</div>
+
 								<div class="row center">
 									<button class="btn waves-effect waves-light" type="submit" id="submitBtn">Submit
 										<i class="material-icons right">send</i>
@@ -87,4 +124,5 @@
 		</div>
 	</div>
 </body>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </html>

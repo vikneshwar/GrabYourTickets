@@ -23,6 +23,7 @@
     <link type="text/css" href="/fonts/SEASRN__.woff">
     <script type="text/javascript" src="/js/script.js"></script>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+ 
 </head>
 <body>
 	<div id="navbar-fixed">
@@ -104,6 +105,14 @@
 										<input id="email" type="email" class="validate" name="email">
 										<label for="email">Email</label>
 										<div id="email_mobile_error" class="error"></div>
+									</div>
+								</div>
+
+								<div class="row center">
+									<div class="input-field col s12">
+										<span>Confirm that you are a human:</span>
+										<div class="g-recaptcha" data-sitekey="6LeoyicTAAAAANpY7uCRo7mpJsUjz1VN_KaKTlTa"></div>
+										<div id="captcha_error" class="error left"></div>
 									</div>
 								</div>
 
@@ -196,4 +205,5 @@
      </div>
    </div>
 </body>
+<script src='https://www.google.com/recaptcha/api.js'></script>
 </html>

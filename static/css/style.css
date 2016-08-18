@@ -201,3 +201,7 @@ html, body {
     left: 0;
     margin: auto;
 }
+
+.g-recaptcha div {
+    display: inline;
+}

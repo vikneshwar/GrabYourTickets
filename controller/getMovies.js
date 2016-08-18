@@ -4,7 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var cheerio = require('cheerio');
 
-var jquery = fs.readFileSync(path.join(__dirname, '../resources/jquery.js'), 'utf-8');
+//var jquery = fs.readFileSync(path.join(__dirname, '../resources/jquery.js'), 'utf-8');
 
 function getMovies(city, callback) {
     // console.log(this);

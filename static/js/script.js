@@ -150,11 +150,12 @@ $(function() {
         } 
         return false;
     });
-    $('#city_error,#movie_error,#cinemas_error,#date_error,#name_error,#email_mobile_error').on('blur',function(e){
+    $('#city_error,#movie_error,#cinemas_error,#date_error,#name_error,#email_mobile_error,#captcha_error').on('blur',function(e){
 
     });
     function isValidateFields() {
         var flag = true;
+        var captchaResponse = grecaptcha.getResponse();
         $('#city_error,#movie_error,#cinemas_error,#date_error,#name_error,#email_mobile_error').html("");
         if ($('#city').val() == "") {
             $('#city_error').html("Please select a city");
@@ -179,6 +180,10 @@ $(function() {
         if ($('#mobile').val() == "" && $('#email').val() == "") {
             $('#email_mobile_error').html('Please provide a Email or Phone No');
             flag = false;
+        }
+        if( captchaResponse === undefined || captchaResponse === null || captchaResponse.trim() === ""){
+            $("#captcha_error").html("Please confirm that you are a human");
+            flag=false;
         }
         return flag;
     }
