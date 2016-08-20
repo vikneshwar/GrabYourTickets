@@ -3,6 +3,8 @@ var app = express();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
+var flash = require('connect-flash');
+var session = require('express-session');
 
 var router = require('./routes/routes.js');
 
@@ -22,7 +24,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-
+app.use(session({
+	secret: config.SESSION_SECRET,
+	resave: true,
+	saveUninitialized: true
+}));
+app.use(flash());
 app.set('views', __dirname + '/static/view');
 app.engine('html', engines.handlebars);
 app.set('view engine', 'html');

@@ -20,7 +20,7 @@ var auth = {
 var transporter = nodemailer.createTransport(mg(auth));
 
 
-function sendEmail(data,callback){
+function sendEmail(data, url, callback){
 	var cinemasTemplate ="<ul>";
 	data.theaterStr.forEach(function(cinemas,index,theaterStr){
 		cinemasTemplate += "<li>"+cinemas+"</li>";
@@ -31,7 +31,7 @@ function sendEmail(data,callback){
 		from: '"Grab Your Tickets" <admin@grabyourtickets.in>' ,
 		to: data.emailId, 
 		subject: 'Hey , Movie Tickets are open',
-		html: 'Hey <b> '+data.name+ ' </b> i guess you have registered to send notification if tickets are available for the movie <b>'+data.movie+ '</b> so, hurry up the tickets are open in the following cinemas</br></br>'+cinemasTemplate+'</br>Click <a="'+data.url+'">here</a> to book tickets now'
+		html: 'Hey <b> '+data.name+ ' </b> i guess you have registered to send notification if tickets are available for the movie <b>'+data.movie+ '</b> so, hurry up the tickets are open in the following cinemas</br></br>'+cinemasTemplate+'</br>Click <a href="'+url+'">here</a> to book tickets now'
 	}
 
 	transporter.sendMail(mailOptions,function(err,info){

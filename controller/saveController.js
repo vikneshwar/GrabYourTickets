@@ -1,6 +1,8 @@
 var User = require('../models/UserModel.js');
 var async = require('async');
 var memoryCache = require('../utility/memoryCache.js')();
+var flash = require('connect-flash');
+var CrytoUtil = require('../utility/CryptoUtil.js');
 
 var config = require('../config.js');
 function saveController(req,res,next) {
@@ -63,20 +65,24 @@ function saveController(req,res,next) {
 		if(err) 
 			return next(err);
 		else if(isExist){
-			res.render('index.html',{
+			req.flash('message','You have already registered for same movie on same day')
+			res.redirect('/')
+			/*res.render('index.html',{
 				message: "You have already registered for same movie on same day"
-			});
+			});*/
 			// res.send("You have already registered for same movie on same day");
 		}
 		else {
 			user.save()
-			.then(function(){
-				res.render('index.html',{
+			.then(function(doc){
+				req.flash('message','Thanks ! We will notify you once the tickets are open')
+				res.redirect('/')
+				/*res.render('index.html',{
 					message: "Thanks ! We will notify you once the tickets are open"
-				});
+				});*/
 				// res.send("Thanks ! We will notify you once the tickets are open");
 			})
-			.catch(function(){
+			.catch(function(err){
 				if(err)
 					return next(new Error("Cannot save the information"));
 					// res.send("Oops !! Error Saving Data");
@@ -92,6 +98,7 @@ var checkExist = function(mobile,email,movie,date,callback){
 				cb(null,'no');
 			}
 			else {
+				mobile = CrytoUtil.encrypt(mobile);
 				User.findOne({mobileNumber:mobile,movie:movie,date:date}).exec()
 				.then(function(doc){
 					if(doc) {
@@ -111,6 +118,7 @@ var checkExist = function(mobile,email,movie,date,callback){
 				cb(null,'no');
 			}
 			else {
+				email = CrytoUtil.encrypt(email);
 				User.findOne({emailId:email,movie:movie,date:date}).exec()
 				.then(function(doc){
 					if(doc) {

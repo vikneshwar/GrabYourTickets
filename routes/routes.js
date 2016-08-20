@@ -4,6 +4,7 @@ var updateCity = require('../jobs/updateCity');
 var saveController = require('../controller/saveController.js');
 var config = require('../config.js');
 var memoryCache = require('../utility/memoryCache.js')();
+var flash = require('connect-flash');
 
 var nodemailer = require('nodemailer');
 var Recaptcha = require('recaptcha2');
@@ -32,7 +33,13 @@ var transporter = nodemailer.createTransport(mg(auth));
 
 
 router.get('/',function(req,res){
-	res.render('index.html');
+	var message = req.flash('message');
+	if(message != undefined && message!= null)
+		res.render('index.html',{
+			message: message
+		});
+	else 
+		res.render('index.html');
 });
 
 router.post('/',function(req,res,next){
@@ -42,14 +49,22 @@ router.post('/',function(req,res,next){
 	})
 	.catch(function(error){
 		console.log(recaptcha.translateErrors(error));
-		res.render('index.html',{
+		req.flash('message','Error Validating your reCaptcha . Please try again');
+		res.redirect('/');
+		/*res.render('index.html',{
 			message: 'Error Validating your reCaptcha . Please try again'
-		});
+		});*/
 	});
 });
 
 router.get('/logissue',function(req,res,next){
-	res.render('issue.html');
+	var message = req.flash('message');
+	if(message != undefined && message!= null)
+		res.render('issue.html',{
+			message: message
+		});
+	else 
+		res.render('issue.html');
 });
 router.post('/logissue',function(req,res,next){
 	recaptcha.validateRequest(req)
@@ -64,16 +79,20 @@ router.post('/logissue',function(req,res,next){
 		transporter.sendMail(mailOptions,function(err,info){
 			if(err)
 				console.log('\n Error sending issue:'+err);
-			res.render('issue.html',{
+			req.flash('message','Thanks , We will look into the issue as soon as possible');
+			res.redirect('/logissue');
+			/*res.render('issue.html',{
 				message: 'Thanks , We will look into the issue as soon as possible'
-			});
+			});*/
 		});
 	})
 	.catch(function(error){
 		console.log(recaptcha.translateErrors(error));
-		res.render('issue.html',{
+		req.flash('message','Error Validating your reCaptcha . Please try again');
+		res.redirect('/');
+		/*res.render('issue.html',{
 			message: 'Error Validating your reCaptcha . Please try again'
-		});
+		});*/
 	});
 });
 router.get('/movie',function(req,res,next){

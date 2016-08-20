@@ -71,7 +71,7 @@ function processData(record,url,callback){
 	async.waterfall([
 		sendRequest.bind(null,record,url),
 		checkCinemas.bind(null,record,url),
-		sendNotification,
+		sendNotification.bind(null,url),
 		deleteData,
 		],finalCallback.bind(this));
 }
@@ -141,13 +141,13 @@ function checkCinemas(record,url,body,cb){
 	});
 	cb(null,record);
 }
- function sendNotification(records,cb){
+ function sendNotification(url,records,cb){
 	async.each(records,(record,notifiCallback) => {
 		if(record.toDelete.length > 0){
 			async.parallel([
 				function(another_cb){
 					if(record.emailId != null && record.emailId != undefined && record.emailId.trim() != "") {
-						notificationCntrl.sendEmail(record,(err,resp) => {
+						notificationCntrl.sendEmail(record, url, (err,resp) => {
 							if(err)
 								another_cb(err);
 							else 
@@ -159,7 +159,7 @@ function checkCinemas(record,url,body,cb){
 				},
 				function(another_cb){
 					if(record.mobileNumber != null && record.mobileNumber != undefined && record.mobileNumber.trim() != ""){
-						notificationCntrl.sendSMS(record,(err,resp) => {
+						notificationCntrl.sendSMS(record, (err,resp) => {
 							if(err)
 								another_cb(err);
 							else
@@ -214,7 +214,7 @@ function deleteData(records,cb){
 					}
 				})
 				.then((doc) => {
-					console.log('updated doc:' +doc._doc);
+					console.log('updated doc:' +JSON.stringify(doc._doc));
 					callback();
 				})
 				.catch((err) => {
