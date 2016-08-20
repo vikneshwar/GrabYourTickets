@@ -1,5 +1,5 @@
 {
-  "name": "Grab Your Tickets",
+  "name": "GrabYourTickets",
   "version": "1.0.0",
   "description": "Sends notification when movie tickets opens",
   "main": "app.js",
