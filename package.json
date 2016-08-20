@@ -1,8 +1,8 @@
 {
-  "name": "request_demo",
+  "name": "Grab Your Tickets",
   "version": "1.0.0",
-  "description": "just testing out request module",
-  "main": "index.js",
+  "description": "Sends notification when movie tickets opens",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --expose-gc app.js"
