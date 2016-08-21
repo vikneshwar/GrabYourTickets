@@ -71,7 +71,7 @@ router.post('/logissue',function(req,res,next){
 	.then(function(){
 		var message = req.body.issue_input;
 		var mailOptions = {
-			from: '"Vikneshwar" <mailtester1993@gmail.com>' ,
+			from: '"Grab Your Tickets" <admin@grabyourtickets.in>' ,
 			to: 'lviknesh@gmail.com', 
 			subject: 'Issue Logged',
 			html: message

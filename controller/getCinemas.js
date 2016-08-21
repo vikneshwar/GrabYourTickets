@@ -3,42 +3,43 @@ var makeRequest = require('./makeRequest');
 var fs = require('fs');
 var path = require('path');
 
-var jquery = fs.readFileSync(path.join(__dirname,'../resources/jquery.js'),'utf-8');
+//var jquery = fs.readFileSync(path.join(__dirname,'../resources/jquery.js'),'utf-8');
+var cheerio = require('cheerio');
 var spicinemasChennai = [
-	{
-		cinema: 'Sathyam',
-		type: 'SPI',
-		code: 'SATHYAM'
-	},
-	{
-		cinema: 'Escape',
-		type: 'SPI',
-		code: 'ESCAPE'
+{
+	cinema: 'Sathyam',
+	type: 'SPI',
+	code: 'SATHYAM'
+},
+{
+	cinema: 'Escape',
+	type: 'SPI',
+	code: 'ESCAPE'
 
-	},
-	{
-		cinema: 'Palazzo',
-		type: 'SPI',
-		code: 'PALAZZO'
-	},
-	{
-		cinema: 'S2 Theyagaraja',
-		type: 'SPI',
-		code: 'S2-THEYAGARAJA'
-	},
-	{
-		cinema: 'S2 Perambur',
-		type: 'SPI',
-		code: 'S2-PERAMBUR'	
-	}
+},
+{
+	cinema: 'Palazzo',
+	type: 'SPI',
+	code: 'PALAZZO'
+},
+{
+	cinema: 'S2 Theyagaraja',
+	type: 'SPI',
+	code: 'S2-THEYAGARAJA'
+},
+{
+	cinema: 'S2 Perambur',
+	type: 'SPI',
+	code: 'S2-PERAMBUR'	
+}
 ];
 
 var spicinemasCoimbatore = [
-	{
-		cinema: 'The Cinema',
-		type : 'SPI',
-		code: 'THE-CINEMAS'
-	}
+{
+	cinema: 'The Cinema',
+	type : 'SPI',
+	code: 'THE-CINEMAS'
+}
 ];
 function getCinemas(city,callback){
 	var city = city;
@@ -67,32 +68,24 @@ function cinemasCallback(city,callback,error,response,body) {
 	else {
 		var date = new Date();
 
-		jsdom.env({
-			html: body,
-			src: [jquery],
-			done: function(err,window){
-				if(error)
-					return callback(err);
-				var $ = window.$;
-				var cinemaList = [];
-				$($('body').find('.cinema-brand-list .__cinema-tiles')).each(function(){
-					var cinemaName = $(this).find('.__cinema-info .__cinema-text a').html();
-					var cinemaCode = $(this).find('.__cinema-info .__cinema-text a').attr('href').split('/');
-					cinemaCode = cinemaCode[cinemaCode.length-1];
-					var cinemaObj = {
-						cinema: cinemaName,
-						code: cinemaCode,
-						type: 'BMS'
-					};
-					cinemaList.push(cinemaObj);
-				});
-				if(city=="chennai")
-					cinemaList = cinemaList.concat(spicinemasChennai);
-				else if(city=="coimbatore")
-					cinemaList = cinemaList.concat(spicinemasCoimbatore);
-				return callback(undefined,cinemaList);
-			}
+		var $ = cheerio.load(body);
+		var cinemaList = [];
+		$($('body').find('.cinema-brand-list .__cinema-tiles')).each(function(){
+			var cinemaName = $(this).find('.__cinema-info .__cinema-text a').html();
+			var cinemaCode = $(this).find('.__cinema-info .__cinema-text a').attr('href').split('/');
+			cinemaCode = cinemaCode[cinemaCode.length-1];
+			var cinemaObj = {
+				cinema: cinemaName,
+				code: cinemaCode,
+				type: 'BMS'
+			};
+			cinemaList.push(cinemaObj);
 		});
+		if(city=="chennai")
+			cinemaList = cinemaList.concat(spicinemasChennai);
+		else if(city=="coimbatore")
+			cinemaList = cinemaList.concat(spicinemasCoimbatore);
+		return callback(undefined,cinemaList);
 	}
 }
 
